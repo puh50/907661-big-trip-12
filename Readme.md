@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Андрей Гапоненко](https://up.htmlacademy.ru/ecmascript/12/user/907661).
-* Наставник: `Неизвестно`.
+* Наставник: [Семён Якушев](https://htmlacademy.ru/profile/id1118791).
 
 ---
 
