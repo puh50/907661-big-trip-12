@@ -330,14 +330,14 @@ const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 
 for (let i = 0; i < DAYS_COUNT; i++) {
   render(tripDaysListElement, tripDayTemplate(), `beforeend`);
-};
+}
 
 const tripDaysItemElement = tripEventsElement.querySelectorAll(`.day`);
 
 for (let i = 0; i < tripDaysItemElement.length; i++) {
-    render(tripDaysItemElement[i], tripPointsListTemplate(), `beforeend`);
-    const tripPointsListElement = tripDaysItemElement[i].querySelector(`.trip-events__list`);
-    for (let j = 0; j < POINT_COUNT; j++) {
-      render(tripPointsListElement, tripPointTemplate(), `beforeend`);
-    }
+  render(tripDaysItemElement[i], tripPointsListTemplate(), `beforeend`);
+  const tripPointsListElement = tripDaysItemElement[i].querySelector(`.trip-events__list`);
+  for (let j = 0; j < POINT_COUNT; j++) {
+    render(tripPointsListElement, tripPointTemplate(), `beforeend`);
+  }
 }
