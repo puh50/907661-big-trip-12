@@ -9,7 +9,6 @@ import {tripPointsListTemplate} from "./view/points-list.js";
 import {tripPointTemplate} from "./view/point.js";
 
 const POINT_COUNT = 3;
-
 const DAYS_COUNT = 3;
 
 const render = (container, template, place) => {
