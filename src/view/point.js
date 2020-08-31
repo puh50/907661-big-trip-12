@@ -1,9 +1,11 @@
-import {typeText} from "./event.js";
+import {typeText} from "./point-form.js";
 
 export const tripPointTemplate = (point) => {
   const {type, city, price, offers, from, to} = point;
 
-  const offerList = offers.map((offer) => {
+  const selectedOffers = offers.filter((offer) => offer.isSelected).slice(0, 3);
+
+  const offerList = selectedOffers.map((offer) => {
     const offerTemplate = `<li class="event__offer">
                             <span class="event__offer-title">${offer.name}</span>
                             &plus;
@@ -21,10 +23,27 @@ export const tripPointTemplate = (point) => {
     // day: `2-digit`,
     // weekday: `long`,
     // timezone: `UTC`,
-    hour24: `numeric`,
+    hour: `2-digit`,
+    hour12: false,
     minute: `numeric`,
-    second: `numeric`,
+    // second: `numeric`,
   };
+
+  const fromMilliseconds = from.getTime();
+  const toMilliseconds = to.getTime();
+  const differenceMilliseconds = toMilliseconds - fromMilliseconds;
+
+  function msToTime(duration) {
+    // let milliseconds = parseInt((duration % 1000) / 100, 10);
+    // let seconds = Math.floor((duration / 1000) % 60);
+    let minutes = Math.floor((duration / (1000 * 60)) % 60);
+    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+    minutes = minutes < 0 ? minutes * (-1) : minutes;
+    hours = hours < 0 ? hours * (-1) : hours;
+
+    return `${hours}H ${minutes}M`;
+  }
 
   return (
     `<li class="trip-events__item">
@@ -40,7 +59,7 @@ export const tripPointTemplate = (point) => {
           &mdash;
           <time class="event__end-time" datetime="2019-03-18T11:00">${to.toLocaleString(`en-US`, options)}</time>
         </p>
-        <p class="event__duration">30M</p>
+        <p class="event__duration">${msToTime(differenceMilliseconds)}</p>
       </div>
 
       <p class="event__price">

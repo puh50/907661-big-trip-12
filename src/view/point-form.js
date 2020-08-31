@@ -10,9 +10,9 @@ const dateOptions = {
   day: `2-digit`,
   // weekday: `long`,
   // timezone: `UTC`,
-  hour24: `numeric`,
-  minute: `numeric`,
-  second: `numeric`
+  hour: `2-digit`,
+  minute: `2-digit`,
+  second: `2-digit`,
 };
 
 const defaultPoint = {
@@ -58,7 +58,7 @@ const defaultPoint = {
 
 export let typeText;
 
-export const createEventTemplate = (point = defaultPoint) => {
+export const createPointFormTemplate = (point = defaultPoint) => {
   const {type, city, price, offers, from, to, photos, description} = point;
 
   if (type !== `check-in` && type !== `sightseeing` && type !== `restaurant`) {
@@ -103,10 +103,12 @@ export const createEventTemplate = (point = defaultPoint) => {
       day: `2-digit`,
       // weekday: `long`,
       // timezone: `UTC`,
-      hour24: `numeric`,
-      minute: `numeric`,
-      second: `numeric`,
+      hour: `2-digit`,
+      hour12: false,
+      minute: `2-digit`,
+      // second: `2-digit`,
     };
+
     return `<div class="event__field-group  event__field-group--time">
               <label class="visually-hidden" for="event-start-time-1">
                 From
