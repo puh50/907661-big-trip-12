@@ -8,6 +8,7 @@ import Point from "./view/point.js";
 import PointForm from "./view/point-form.js";
 import {generatePoint} from "./mock/point-mock.js";
 import {render, RenderPosition} from "./util.js";
+import NoPoints from "./view/no-points.js";
 
 const POINT_COUNT = 21;
 
@@ -32,17 +33,20 @@ const uniqueDates = [...new Set(points.map((point) => {
 
 const pageHeaderElement = document.querySelector(`.page-header`);
 const tripMainElement = pageHeaderElement.querySelector(`.trip-main`);
-render(tripMainElement, new TripInfo().getElement(), RenderPosition.AFTERBEGIN);
+render(tripMainElement, new TripInfo(POINT_COUNT).getElement(), RenderPosition.AFTERBEGIN);
 
 const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
 const hiddenTitleMenu = tripControlsElement.querySelectorAll(`.visually-hidden`);
 render(tripControlsElement, new PageMenu().getElement(), RenderPosition.AFTER, hiddenTitleMenu[1]);
 render(tripControlsElement, new Filter().getElement(), RenderPosition.BEFOREEND);
 
+const eventSection = document.querySelector(`.trip-events`);
+render(eventSection, new NoPoints(POINT_COUNT).getElement(), RenderPosition.BEFOREEND);
+
 const pageMainElement = document.querySelector(`.page-main`);
 const tripEventsElement = pageMainElement.querySelector(`.trip-events`);
-render(tripEventsElement, new Sort().getElement(), RenderPosition.BEFOREEND);
-render(tripEventsElement, new DaysList().getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new Sort(POINT_COUNT).getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new DaysList(POINT_COUNT).getElement(), RenderPosition.BEFOREEND);
 
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 
@@ -93,3 +97,4 @@ for (let i = 0; i < uniqueDates.length; i++) {
     }
   });
 }
+
