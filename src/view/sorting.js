@@ -1,8 +1,9 @@
 import {createElement} from "../util.js";
 
-const tripSortTemplate = () => {
-  return (
-    `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const tripSortTemplate = (pointCount) => {
+  return pointCount === 0
+    ? ` `
+    : `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <span class="trip-sort__item  trip-sort__item--day">Day</span>
 
     <div class="trip-sort__item  trip-sort__item--event">
@@ -25,17 +26,17 @@ const tripSortTemplate = () => {
     </div>
 
     <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
-  </form>`
-  );
+  </form>`;
 };
 
 export default class Sort {
-  constructor() {
+  constructor(pointCount) {
+    this._pointCount = pointCount;
     this._element = null;
   }
 
   getTemplate() {
-    return tripSortTemplate();
+    return tripSortTemplate(this._pointCount);
   }
 
   getElement() {
