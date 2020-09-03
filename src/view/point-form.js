@@ -1,5 +1,5 @@
 import {cities} from "../mock/point-mock.js";
-import {upFirstLetter} from "../util.js";
+import {upFirstLetter, createElement} from "../util.js";
 
 const date = new Date(2020, 7, 26, 0);
 
@@ -56,11 +56,10 @@ const defaultPoint = {
   photos: [],
 };
 
-export let typeText;
-
-export const createPointFormTemplate = (point = defaultPoint) => {
+const createPointFormTemplate = (point = defaultPoint) => {
   const {type, city, price, offers, from, to, photos, description} = point;
 
+  let typeText;
   if (type !== `check-in` && type !== `sightseeing` && type !== `restaurant`) {
     typeText = `${type} to`;
   } else {
@@ -248,3 +247,26 @@ export const createPointFormTemplate = (point = defaultPoint) => {
   </form>`
   );
 };
+
+export default class PointForm {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointFormTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
