@@ -13,10 +13,11 @@ export const upFirstLetter = (string) => {
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  AFTER: `after`
 };
 
-export const render = (container, element, place) => {
+export const render = (container, element, place, referenceNode) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
@@ -24,6 +25,8 @@ export const render = (container, element, place) => {
     case RenderPosition.BEFOREEND:
       container.append(element);
       break;
+    case RenderPosition.AFTER:
+      container.insertBefore(element, referenceNode);
   }
 };
 

@@ -56,11 +56,10 @@ const defaultPoint = {
   photos: [],
 };
 
-export let typeText;
-
 const createPointFormTemplate = (point = defaultPoint) => {
   const {type, city, price, offers, from, to, photos, description} = point;
 
+  let typeText;
   if (type !== `check-in` && type !== `sightseeing` && type !== `restaurant`) {
     typeText = `${type} to`;
   } else {

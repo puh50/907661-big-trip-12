@@ -1,8 +1,15 @@
-import {typeText} from "./point-form.js";
-import {createElement} from "../util.js";
+import {createElement, upFirstLetter} from "../util.js";
 
 export const tripPointTemplate = (point) => {
   const {type, city, price, offers, from, to} = point;
+
+  let typeText;
+  if (type !== `check-in` && type !== `sightseeing` && type !== `restaurant`) {
+    typeText = `${type} to`;
+  } else {
+    typeText = `${type} in`;
+  }
+  typeText = upFirstLetter(typeText);
 
   const selectedOffers = offers.filter((offer) => offer.isSelected).slice(0, 3);
 
