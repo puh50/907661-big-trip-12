@@ -1,4 +1,4 @@
-import {createElement} from "../util.js";
+import Abstract from "./abstract.js";
 
 const pageMenuTemplate = () => {
   return `<nav class="trip-controls__trip-tabs  trip-tabs">
@@ -7,24 +7,10 @@ const pageMenuTemplate = () => {
           </nav>`;
 };
 
-export default class PageMenu {
-  constructor() {
-    this._element = null;
-  }
+export default class PageMenu extends Abstract {
 
   getTemplate() {
     return pageMenuTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

@@ -1,4 +1,4 @@
-import {createElement} from "../util.js";
+import Abstract from "./abstract.js";
 
 const tripInfoTemplate = (pointCount) => {
   return pointCount === 0
@@ -20,25 +20,14 @@ const tripInfoTemplate = (pointCount) => {
       </section>`;
 };
 
-export default class TripInfo {
+export default class TripInfo extends Abstract {
   constructor(pointCount) {
+    super();
     this._pointCount = pointCount;
-    this._element = null;
   }
 
   getTemplate() {
     return tripInfoTemplate(this._pointCount);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

@@ -1,4 +1,5 @@
-import {createElement, upFirstLetter} from "../util.js";
+import {upFirstLetter} from "../utils/common.js";
+import Abstract from "./abstract.js";
 
 export const tripPointTemplate = (point) => {
   const {type, city, price, offers, from, to} = point;
@@ -85,25 +86,26 @@ export const tripPointTemplate = (point) => {
           </li>`;
 };
 
-export default class Point {
+export default class Point extends Abstract {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return tripPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
+
 }

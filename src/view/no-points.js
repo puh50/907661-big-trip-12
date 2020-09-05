@@ -1,4 +1,4 @@
-import {createElement} from "../util.js";
+import Abstract from "./abstract.js";
 
 const noPointsTemplate = (pointCount) => {
   return pointCount === 0
@@ -6,25 +6,14 @@ const noPointsTemplate = (pointCount) => {
     : ` `;
 };
 
-export default class NoPoints {
+export default class NoPoints extends Abstract {
   constructor(pointCount) {
+    super();
     this._pointCount = pointCount;
-    this._element = null;
   }
 
   getTemplate() {
     return noPointsTemplate(this._pointCount);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
