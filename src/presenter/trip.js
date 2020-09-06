@@ -5,20 +5,25 @@ import Point from "../view/point.js";
 import PointForm from "../view/point-form.js";
 import NoPoints from "../view/no-points.js";
 import {render, RenderPosition, replace} from "../utils/render.js";
+import {sortByTime, sortByPrice} from "../utils/point.js";
 import {POINT_COUNT} from "../main.js";
 import {generatePoint} from "../mock/point-mock.js";
+import {SortType} from "../const.js";
 
 
 export default class Trip {
   constructor(tripContainer) {
     this._tripContainer = tripContainer;
+    this._currentSortType = SortType.DEFAULT;
 
-    this._sortComponent = new Sort(POINT_COUNT);
-    this._daysListComponent = new DaysList(POINT_COUNT);
+    this._sortComponent = new Sort();
+    this._daysListComponent = new DaysList();
     this._tripDayComponent = new TripDay();
     this._pointComponent = new Point();
     this._pointFormComponent = new PointForm();
     this._noPointsComponent = new NoPoints();
+
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(tripPoints) {
@@ -26,8 +31,45 @@ export default class Trip {
     // 1. В отличии от сортировки по любому параметру,
     // исходный порядок можно сохранить только одним способом -
     // сохранив исходный массив:
-    this._sourcedBoardTasks = tripPoints.slice();
+    // this._sourcedtripPoints = tripPoints.slice();
     this._renderTrip();
+  }
+
+  _sortPoints(sortType) {
+    // 2. Этот исходный массив задач необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardTasks
+    switch (sortType) {
+      case SortType.TIME:
+        this._tripPoints.sort(sortByTime);
+        break;
+      case SortType.PRICE:
+        this._tripPoints.sort(sortByPrice);
+        break;
+      default:
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardTasks исходный массив
+        this._boardTasks = this._sourcedBoardTasks.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortPoints(sortType);
+    // - Очищаем список
+    // - Рендерим список заново
+    this._clearPointsList();
+    // this._renderTripPoints();
+  }
+
+  _renderSort() {
+    render(this._tripContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderNoPoints() {
@@ -118,6 +160,11 @@ export default class Trip {
     this._renderSort();
     this._renderDaysList();
     this._renderTripPoints();
+  }
+
+  _clearPointsList() {
+    this._daysListComponent.getElement().innerHTML = ``;
+    this._pointComponent.getElement().innerHTML = ``;
   }
 
 }

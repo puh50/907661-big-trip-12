@@ -5,7 +5,7 @@ import {generatePoint} from "./mock/point-mock.js";
 import {render, RenderPosition} from "./utils/render.js";
 import TripPresenter from "./presenter/trip.js";
 
-export const POINT_COUNT = 10;
+export const POINT_COUNT = 20;
 
 const points = new Array(POINT_COUNT).fill().map(generatePoint).sort((a, b) => {
   return a.from - b.from;
