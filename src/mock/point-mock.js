@@ -1,4 +1,4 @@
-import {getRandomInteger} from "../util.js";
+import {getRandomInteger} from "../utils/common.js";
 
 const pointTypes = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
 export const cities = [`Saint Petersburg`, `Amsterdam`, `Geneva`, `Chamonix`];

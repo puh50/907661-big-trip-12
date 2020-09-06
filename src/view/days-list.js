@@ -1,28 +1,16 @@
-import {createElement} from "../util.js";
+import Abstract from "./abstract.js";
 
-const tripDaysListTemplate = (pointCount) => {
-  return pointCount === 0 ? ` ` : `<ul class="trip-days"></ul>`;
+const tripDaysListTemplate = () => {
+  return `<ul class="trip-days"></ul>`;
 };
 
-export default class DaysList {
-  constructor(pointCount) {
-    this._pointCount = pointCount;
-    this._element = null;
+export default class DaysList extends Abstract {
+  constructor() {
+    super();
   }
 
   getTemplate() {
-    return tripDaysListTemplate(this._pointCount);
+    return tripDaysListTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

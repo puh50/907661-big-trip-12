@@ -1,30 +1,16 @@
-import {createElement} from "../util.js";
+import Abstract from "./abstract.js";
 
-const noPointsTemplate = (pointCount) => {
-  return pointCount === 0
-    ? `<p class="trip-events__msg">Click New Event to create your first point</p>`
-    : ` `;
+const noPointsTemplate = () => {
+  return `<p class="trip-events__msg">Click New Event to create your first point</p>`;
 };
 
-export default class NoPoints {
-  constructor(pointCount) {
-    this._pointCount = pointCount;
-    this._element = null;
+export default class NoPoints extends Abstract {
+  constructor() {
+    super();
   }
 
   getTemplate() {
-    return noPointsTemplate(this._pointCount);
+    return noPointsTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
