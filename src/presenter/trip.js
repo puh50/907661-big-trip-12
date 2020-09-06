@@ -1,4 +1,3 @@
-// import TripInfo from "../view/trip-info.js";
 import Sort from "../view/sorting.js";
 import DaysList from "../view/days-list.js";
 import TripDay from "../view/day.js";
@@ -14,17 +13,12 @@ export default class Trip {
   constructor(tripContainer) {
     this._tripContainer = tripContainer;
 
-    // this._tripInfoComponent = new TripInfo();
     this._sortComponent = new Sort(POINT_COUNT);
     this._daysListComponent = new DaysList(POINT_COUNT);
     this._tripDayComponent = new TripDay();
     this._pointComponent = new Point();
     this._pointFormComponent = new PointForm();
-    this._noPointsComponent = new NoPoints(POINT_COUNT);
-
-    // this._handleEditPointClick = this._handleEditPointClick.bind(this);
-    // this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    // this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._noPointsComponent = new NoPoints();
   }
 
   init(tripPoints) {
@@ -35,10 +29,6 @@ export default class Trip {
     this._sourcedBoardTasks = tripPoints.slice();
     this._renderTrip();
   }
-
-  // _renderTripInfo() {
-  //   render(this._tripContainer/* ? */, this._tripInfoComponent(POINT_COUNT), RenderPosition.AFTERBEGIN);
-  // }
 
   _renderNoPoints() {
     render(this._tripContainer, this._noPointsComponent, RenderPosition.BEFOREEND);
@@ -75,10 +65,10 @@ export default class Trip {
     for (let i = 0; i < uniqueDates.length; i++) {
       const daysCount = i + 1;
 
-      const tripDay = new TripDay(daysCount, uniqueDates[i]).getElement();
+      const tripDay = new TripDay(daysCount, uniqueDates[i]);
 
-      render(this._daysListComponent, tripDay, RenderPosition.BEFOREEND);
-      const tripEventList = tripDay.querySelector(`.trip-events__list`);
+      render(this._daysListComponent, tripDay.getElement(), RenderPosition.BEFOREEND);
+      const tripEventList = tripDay.getEventList();
 
       points.filter((point) => {
         return point.from.toLocaleDateString(`en-US`, dateOptions) === uniqueDates[i];
@@ -121,7 +111,10 @@ export default class Trip {
   }
 
   _renderTrip() {
-    this._renderNoPoints();
+    if (POINT_COUNT === 0) {
+      this._renderNoPoints();
+      return;
+    }
     this._renderSort();
     this._renderDaysList();
     this._renderTripPoints();

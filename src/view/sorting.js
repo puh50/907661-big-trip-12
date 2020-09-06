@@ -1,9 +1,7 @@
 import Abstract from "./abstract.js";
 
-const tripSortTemplate = (pointCount) => {
-  return pointCount === 0
-    ? ` `
-    : `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const tripSortTemplate = () => {
+  return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <span class="trip-sort__item  trip-sort__item--day">Day</span>
 
     <div class="trip-sort__item  trip-sort__item--event">
@@ -30,13 +28,12 @@ const tripSortTemplate = (pointCount) => {
 };
 
 export default class Sort extends Abstract {
-  constructor(pointCount) {
+  constructor() {
     super();
-    this._pointCount = pointCount;
   }
 
   getTemplate() {
-    return tripSortTemplate(this._pointCount);
+    return tripSortTemplate();
   }
 
 }

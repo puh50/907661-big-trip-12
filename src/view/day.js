@@ -17,10 +17,18 @@ export default class TripDay extends Abstract {
     super();
     this._day = day;
     this._dayDate = dayDate;
+    this._eventList = null;
   }
 
   getTemplate() {
     return tripDayTemplate(this._day, this._dayDate);
+  }
+
+  getEventList() {
+    if (!this._eventList) {
+      this._eventList = this.getElement().querySelector(`.trip-events__list`);
+    }
+    return this._eventList;
   }
 
 }
