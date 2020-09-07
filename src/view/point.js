@@ -55,7 +55,11 @@ export const tripPointTemplate = (point) => {
     hours = hours < 0 ? hours * (-1) : hours;
     days = days < 0 ? days * (-1) : days;
 
-    return `${days}D ${hours}H ${minutes}M`;
+    if (days === 0) {
+      return `${hours}H ${minutes}M`;
+    } else {
+      return `${days}D ${hours}H ${minutes}M`;
+    }
   }
 
   return `<li class="trip-events__item">
