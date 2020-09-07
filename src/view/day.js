@@ -13,7 +13,7 @@ const tripDayTemplate = (day, dayDate) => {
 };
 
 export default class TripDay extends Abstract {
-  constructor(day, dayDate) {
+  constructor(day = ``, dayDate = ``) {
     super();
     this._day = day;
     this._dayDate = dayDate;

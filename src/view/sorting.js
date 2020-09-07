@@ -31,6 +31,8 @@ const tripSortTemplate = () => {
 export default class Sort extends Abstract {
   constructor() {
     super();
+
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
@@ -38,7 +40,7 @@ export default class Sort extends Abstract {
   }
 
   _sortTypeChangeHandler(evt) {
-    if (evt.target.tagName !== `label`) {
+    if (evt.target.tagName !== `LABEL`) {
       return;
     }
 

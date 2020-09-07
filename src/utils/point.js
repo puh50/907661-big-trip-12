@@ -1,5 +1,5 @@
 export const sortByTime = (pointA, pointB) => {
-  return pointA.from.getTime() - pointB.to.getTime();
+  return (pointA.to.getTime() - pointA.from.getTime()) - (pointB.to.getTime() - pointB.from.getTime());
 };
 
 export const sortByPrice = (pointA, pointB) => {

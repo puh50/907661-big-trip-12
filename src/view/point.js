@@ -43,15 +43,19 @@ export const tripPointTemplate = (point) => {
   const differenceMilliseconds = toMilliseconds - fromMilliseconds;
 
   function msToTime(duration) {
-    // let milliseconds = parseInt((duration % 1000) / 100, 10);
-    // let seconds = Math.floor((duration / 1000) % 60);
-    let minutes = Math.floor((duration / (1000 * 60)) % 60);
-    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+    let days = Math.floor(duration / (24 * 60 * 60 * 1000));
+    let daysms = duration % (24 * 60 * 60 * 1000);
+    let hours = Math.floor((daysms) / (60 * 60 * 1000));
+    let hoursms = duration % (60 * 60 * 1000);
+    let minutes = Math.floor((hoursms) / (60 * 1000));
+    // let minutesms = duration % (60 * 1000);
+    // let sec = Math.floor((minutesms) / (1000));
 
     minutes = minutes < 0 ? minutes * (-1) : minutes;
     hours = hours < 0 ? hours * (-1) : hours;
+    days = days < 0 ? days * (-1) : days;
 
-    return `${hours}H ${minutes}M`;
+    return `${days}D ${hours}H ${minutes}M`;
   }
 
   return `<li class="trip-events__item">
