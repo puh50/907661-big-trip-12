@@ -1,6 +1,6 @@
-import {cities} from "../mock/point-mock.js";
+import {cities, pointTypesTransport, pointTypesIn} from "../mock/point-mock.js";
 import {upFirstLetter} from "../utils/common.js";
-import Abstract from "./abstract.js";
+import SmartView from "./smart.js";
 
 const date = new Date(2020, 7, 26, 0);
 
@@ -58,7 +58,7 @@ const defaultPoint = {
 };
 
 const createPointFormTemplate = (point = defaultPoint) => {
-  const {type, city, price, offers, from, to, photos, description} = point;
+  const {type, city, price, offers, from, to, photos, description, isFavorite} = point;
 
   let typeText;
   if (type !== `check-in` && type !== `sightseeing` && type !== `restaurant`) {
@@ -68,7 +68,38 @@ const createPointFormTemplate = (point = defaultPoint) => {
   }
   typeText = upFirstLetter(typeText);
 
-  const additionalButtonTemplate = `<label class="event__favorite-btn" for="event-favorite-1">
+  const typeItemsTransport = pointTypesTransport.map((pointType) => {
+    const typeFirstUppercase = upFirstLetter(pointType);
+    return type === pointType
+      ? `<div class="event__type-item">
+          <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" checked>
+          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${typeFirstUppercase}</label>
+        </div>`
+      : `<div class="event__type-item">
+          <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${typeFirstUppercase}</label>
+        </div>`;
+  }).join(` `);
+
+  const typeItemsIn = pointTypesIn.map((pointType) => {
+    const typeFirstUppercase = upFirstLetter(pointType);
+    return type === pointType
+      ? `<div class="event__type-item">
+          <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" checked>
+          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${typeFirstUppercase}</label>
+        </div>`
+      : `<div class="event__type-item">
+          <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${typeFirstUppercase}</label>
+        </div>`;
+  }).join(` `);
+
+  const favoriteButton = isFavorite
+    ? `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>`
+    : `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite">`;
+
+  const additionalButtonTemplate = `${favoriteButton}
+  <label class="event__favorite-btn" for="event-favorite-1">
   <span class="visually-hidden">Add to favorite</span>
   <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
     <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"></path>
@@ -149,60 +180,12 @@ const createPointFormTemplate = (point = defaultPoint) => {
                 <div class="event__type-list">
                   <fieldset class="event__type-group">
                     <legend class="visually-hidden">Transfer</legend>
-
-                    <div class="event__type-item">
-                      <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                      <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                      <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                      <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                      <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
-                      <label class=" event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                      <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                      <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-                    </div>
+                    ${typeItemsTransport}
                   </fieldset>
 
                   <fieldset class="event__type-group">
                     <legend class="visually-hidden">Activity</legend>
-
-                    <div class="event__type-item">
-                      <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                      <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                      <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-                    </div>
-
-                    <div class="event__type-item">
-                      <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                      <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-                    </div>
+                    ${typeItemsIn}
                   </fieldset>
                 </div>
               </div>
@@ -247,26 +230,130 @@ const createPointFormTemplate = (point = defaultPoint) => {
           </form></div>`;
 };
 
-export default class PointForm extends Abstract {
+export default class PointForm extends SmartView {
   constructor(point) {
     super();
-    this._point = point;
+    this._data = PointForm.parsePointToData(point);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._favoriteSelectHandler = this._favoriteSelectHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._formCancelHandler = this._formCancelHandler.bind(this);
+    this._eventTypeSelectHandler = this._eventTypeSelectHandler.bind(this);
+    this._eventCitySelectHandler = this._eventCitySelectHandler.bind(this);
+
+    this._setInnerHandlers();
+  }
+
+  reset(point) {
+    this.updateData(
+        PointForm.parsePointToData(point)
+    );
   }
 
   getTemplate() {
-    return createPointFormTemplate(this._point);
+    return createPointFormTemplate(this._data);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+  }
+
+  _favoriteSelectHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      isFavorite: !this._data.isFavorite
+    });
+  }
+
+  _formCancelHandler(evt) {
+    evt.preventDefault();
+    this._callback.formCancel();
+  }
+
+  _eventTypeSelectHandler(evt) {
+    evt.preventDefault();
+    this._callback.eventTypeSelect();
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+
+  _eventCitySelectHandler(evt) {
+    evt.preventDefault();
+    this._callback.eventCitySelect();
+    this.updateData({
+      city: evt.target.value
+    });
+  }
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      price: evt.target.value
+    }, true);
   }
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setformCancelHandler(callback) {
+    this._callback.formCancel = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formCancelHandler);
+  }
+
+  setEventTypeSelectHandler(callback) {
+    this._callback.eventTypeSelect = callback;
+    const eventTypeInputs = this.getElement().querySelectorAll(`.event__type-input`);
+    for (let eventTypeInput of eventTypeInputs) {
+      eventTypeInput.addEventListener(`change`, this._callback.eventTypeSelect);
+    }
+  }
+
+  setEventCitySelectHandler(callback) {
+    this._callback.eventCitySelect = callback;
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventCitySelectHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    if (this.getElement().querySelector(`.event__favorite-icon`)) {
+      this.getElement().querySelector(`.event__favorite-icon`).addEventListener(`click`, this._callback.favoriteClick);
+    }
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__favorite-icon`)
+      .addEventListener(`click`, this._favoriteSelectHandler);
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`input`, this._priceInputHandler);
+  }
+
+  static parsePointToData(point) {
+    return Object.assign(
+        {},
+        point
+    );
+  }
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+
+    if (!data.isFavorite) {
+      data.isFavorite = false;
+    }
+
+    return data;
   }
 
 }
