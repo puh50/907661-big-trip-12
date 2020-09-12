@@ -246,9 +246,7 @@ export default class PointForm extends SmartView {
   }
 
   reset(point) {
-    this.updateData(
-        PointForm.parsePointToData(point)
-    );
+    this.updateData(PointForm.parsePointToData(point), true);
   }
 
   getTemplate() {
@@ -266,8 +264,7 @@ export default class PointForm extends SmartView {
     this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
   }
 
-  _favoriteSelectHandler(evt) {
-    evt.preventDefault();
+  _favoriteSelectHandler() {
     this.updateData({
       isFavorite: !this._data.isFavorite
     }, true);
@@ -330,6 +327,9 @@ export default class PointForm extends SmartView {
   }
 
   _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.event__favorite-icon`)
+      .addEventListener(`click`, this._favoriteSelectHandler);
     this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`input`, this._priceInputHandler);

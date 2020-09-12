@@ -32,11 +32,18 @@ export default class PointPresenter {
     const prevPointFormComponent = this._pointFormComponent;
 
     this._pointComponent = new Point(point);
-    this._pointFormComponent = new PointForm(point);
+
+    if (!this._pointFormComponent) {
+      this._pointFormComponent = new PointForm(point);
+      this._pointFormComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+      this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
+    }
+
+    // this._pointFormComponent = new PointForm(point);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
-    this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._pointFormComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    // this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
+    // this._pointFormComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     // this._pointFormComponent.setEventTypeSelectHandler(this._handleTypeSelect);
     // this._pointFormComponent.setEventCitySelectHandler(this._handleCitySelect);
 
@@ -45,16 +52,21 @@ export default class PointPresenter {
       return;
     }
 
-    if (this._mode === Mode.DEFAULT) {
-      replace(this._pointComponent, prevPointComponent);
-    }
+    // if (this._mode === Mode.DEFAULT) {
+    // replace(this._pointComponent, prevPointComponent);
+    // }
 
-    if (this._mode === Mode.EDITING) {
-      replace(this._pointFormComponent, prevPointFormComponent);
-    }
+    // if (this._mode === Mode.EDITING) {
+    // replace(this._pointFormComponent, prevPointFormComponent);
+    // }
 
-    remove(prevPointComponent);
-    remove(prevPointFormComponent);
+    // if (!this._pointFormComponent) {
+    //   this._pointFormComponent = new PointForm(point);
+    //   this._pointFormComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    // }
+
+    // remove(prevPointComponent);
+    // remove(prevPointFormComponent);
   }
 
   destroy() {
@@ -83,8 +95,10 @@ export default class PointPresenter {
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      this._pointFormComponent.reset(this._point);
-      this._replaceFormToPoint();
+      if (this._pointFormComponent !== null) {
+        this._pointFormComponent.reset(this._point);
+        this._replaceFormToPoint();
+      }
       document.removeEventListener(`keydown`, this._escKeyDownHandler);
     }
   }
