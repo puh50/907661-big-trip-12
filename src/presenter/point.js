@@ -20,8 +20,8 @@ export default class PointPresenter {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleTypeSelect = this._handleTypeSelect.bind(this);
-    this._handleCitySelect = this._handleCitySelect.bind(this);
+    // this._handleTypeSelect = this._handleTypeSelect.bind(this);
+    // this._handleCitySelect = this._handleCitySelect.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
@@ -37,8 +37,8 @@ export default class PointPresenter {
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointFormComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._pointFormComponent.setEventTypeSelectHandler(this._handleTypeSelect);
-    this._pointFormComponent.setEventCitySelectHandler(this._handleCitySelect);
+    // this._pointFormComponent.setEventTypeSelectHandler(this._handleTypeSelect);
+    // this._pointFormComponent.setEventCitySelectHandler(this._handleCitySelect);
 
     if (prevPointComponent === null || prevPointFormComponent === null) {
       render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
@@ -110,30 +110,31 @@ export default class PointPresenter {
     );
   }
 
-  _handleTypeSelect(evt) {
-    this._changeData(
-        Object.assign(
-            {},
-            this._point,
-            {
-              type: evt.target.value,
-            }
-        )
-    );
-  }
+  // _handleTypeSelect(evt) {
+  //   this._changeData(
+  //       Object.assign(
+  //           {},
+  //           this._point,
+  //           {
+  //             type: evt.target.value,
+  //           }
+  //       )
+  //   );
+  // }
 
-  _handleCitySelect(evt) {
-    this._changeData(
-        Object.assign(
-            {},
-            this._point,
-            {
-              city: evt.target.value,
-              // photos: evt.target.value,
-              // description: evt.target.value,
-            }
-        )
-    );
-  }
+  // _handleCitySelect(evt) {
+  //   // console.log(evt.target);
+  //   this._changeData(
+  //       Object.assign(
+  //           {},
+  //           this._point,
+  //           {
+  //             city: this._point.city,
+  //             // photos: evt.target.value,
+  //             // description: evt.target.value,
+  //           }
+  //       )
+  //   );
+  // }
 
 }

@@ -258,6 +258,7 @@ export default class PointForm extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
   _formSubmitHandler(evt) {
@@ -269,7 +270,7 @@ export default class PointForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       isFavorite: !this._data.isFavorite
-    });
+    }, true);
   }
 
   _formCancelHandler(evt) {
@@ -279,18 +280,16 @@ export default class PointForm extends SmartView {
 
   _eventTypeSelectHandler(evt) {
     evt.preventDefault();
-    this._callback.eventTypeSelect();
     this.updateData({
       type: evt.target.value
-    });
+    }, false);
   }
 
   _eventCitySelectHandler(evt) {
     evt.preventDefault();
-    this._callback.eventCitySelect();
     this.updateData({
-      city: evt.target.value
-    });
+      city: evt.target.value,
+    }, true);
   }
 
   _priceInputHandler(evt) {
@@ -310,18 +309,18 @@ export default class PointForm extends SmartView {
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formCancelHandler);
   }
 
-  setEventTypeSelectHandler(callback) {
-    this._callback.eventTypeSelect = callback;
-    const eventTypeInputs = this.getElement().querySelectorAll(`.event__type-input`);
-    for (let eventTypeInput of eventTypeInputs) {
-      eventTypeInput.addEventListener(`change`, this._callback.eventTypeSelect);
-    }
-  }
+  // setEventTypeSelectHandler(callback) {
+  //   this._callback.eventTypeSelect = callback;
+  //   const eventTypeInputs = this.getElement().querySelectorAll(`.event__type-input`);
+  //   for (let eventTypeInput of eventTypeInputs) {
+  //     eventTypeInput.addEventListener(`change`, this._callback.eventTypeSelect);
+  //   }
+  // }
 
-  setEventCitySelectHandler(callback) {
-    this._callback.eventCitySelect = callback;
-    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventCitySelectHandler);
-  }
+  // setEventCitySelectHandler(callback) {
+  //   this._callback.eventCitySelect = callback;
+  //   this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventCitySelectHandler);
+  // }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
@@ -332,11 +331,15 @@ export default class PointForm extends SmartView {
 
   _setInnerHandlers() {
     this.getElement()
-      .querySelector(`.event__favorite-icon`)
-      .addEventListener(`click`, this._favoriteSelectHandler);
-    this.getElement()
       .querySelector(`.event__input--price`)
       .addEventListener(`input`, this._priceInputHandler);
+    this.getElement()
+      .querySelectorAll(`.event__type-input`).forEach((element) => {
+        element.addEventListener(`change`, this._eventTypeSelectHandler);
+      });
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`change`, this._eventCitySelectHandler);
   }
 
   static parsePointToData(point) {
