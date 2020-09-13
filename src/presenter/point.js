@@ -20,8 +20,6 @@ export default class PointPresenter {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    // this._handleTypeSelect = this._handleTypeSelect.bind(this);
-    // this._handleCitySelect = this._handleCitySelect.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
@@ -39,34 +37,12 @@ export default class PointPresenter {
       this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     }
 
-    // this._pointFormComponent = new PointForm(point);
-
     this._pointComponent.setEditClickHandler(this._handleEditClick);
-    // this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
-    // this._pointFormComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    // this._pointFormComponent.setEventTypeSelectHandler(this._handleTypeSelect);
-    // this._pointFormComponent.setEventCitySelectHandler(this._handleCitySelect);
 
     if (prevPointComponent === null || prevPointFormComponent === null) {
       render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
       return;
     }
-
-    // if (this._mode === Mode.DEFAULT) {
-    // replace(this._pointComponent, prevPointComponent);
-    // }
-
-    // if (this._mode === Mode.EDITING) {
-    // replace(this._pointFormComponent, prevPointFormComponent);
-    // }
-
-    // if (!this._pointFormComponent) {
-    //   this._pointFormComponent = new PointForm(point);
-    //   this._pointFormComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    // }
-
-    // remove(prevPointComponent);
-    // remove(prevPointFormComponent);
   }
 
   destroy() {
@@ -95,10 +71,8 @@ export default class PointPresenter {
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      if (this._pointFormComponent !== null) {
-        this._pointFormComponent.reset(this._point);
-        this._replaceFormToPoint();
-      }
+      this._pointFormComponent.reset(this._point);
+      this._replaceFormToPoint();
       document.removeEventListener(`keydown`, this._escKeyDownHandler);
     }
   }
@@ -110,6 +84,7 @@ export default class PointPresenter {
   _handleFormSubmit(point) {
     this._changeData(point);
     this._replaceFormToPoint();
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   _handleFavoriteClick() {
@@ -123,32 +98,5 @@ export default class PointPresenter {
         )
     );
   }
-
-  // _handleTypeSelect(evt) {
-  //   this._changeData(
-  //       Object.assign(
-  //           {},
-  //           this._point,
-  //           {
-  //             type: evt.target.value,
-  //           }
-  //       )
-  //   );
-  // }
-
-  // _handleCitySelect(evt) {
-  //   // console.log(evt.target);
-  //   this._changeData(
-  //       Object.assign(
-  //           {},
-  //           this._point,
-  //           {
-  //             city: this._point.city,
-  //             // photos: evt.target.value,
-  //             // description: evt.target.value,
-  //           }
-  //       )
-  //   );
-  // }
 
 }

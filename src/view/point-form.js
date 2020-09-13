@@ -290,7 +290,7 @@ export default class PointForm extends SmartView {
   }
 
   _priceInputHandler(evt) {
-    evt.preventDefault();
+    // evt.preventDefault();
     this.updateData({
       price: evt.target.value
     }, true);
@@ -305,19 +305,6 @@ export default class PointForm extends SmartView {
     this._callback.formCancel = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._formCancelHandler);
   }
-
-  // setEventTypeSelectHandler(callback) {
-  //   this._callback.eventTypeSelect = callback;
-  //   const eventTypeInputs = this.getElement().querySelectorAll(`.event__type-input`);
-  //   for (let eventTypeInput of eventTypeInputs) {
-  //     eventTypeInput.addEventListener(`change`, this._callback.eventTypeSelect);
-  //   }
-  // }
-
-  // setEventCitySelectHandler(callback) {
-  //   this._callback.eventCitySelect = callback;
-  //   this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventCitySelectHandler);
-  // }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
