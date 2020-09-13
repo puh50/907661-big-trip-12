@@ -1,6 +1,14 @@
 import {getRandomInteger} from "../utils/common.js";
 
-const pointTypes = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
+// Date.now() и Math.random() - плохие решения для генерации id
+// в "продуктовом" коде, а для моков самое то.
+// Для "продуктового" кода используйте что-то понадежнее,
+// вроде nanoid - https://github.com/ai/nanoid
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+export const pointTypes = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
+export const pointTypesTransport = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
+export const pointTypesIn = [`check-in`, `sightseeing`, `restaurant`];
 export const cities = [`Saint Petersburg`, `Amsterdam`, `Geneva`, `Chamonix`];
 
 export const generateDate = () => {
@@ -104,5 +112,7 @@ export const generatePoint = () => {
     to: new Date(Math.max(from, to)),
     photos,
     description,
+    id: generateId(),
+    isFavorite: false,
   };
 };

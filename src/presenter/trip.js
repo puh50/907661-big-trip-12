@@ -1,28 +1,29 @@
 import Sort from "../view/sorting.js";
 import DaysList from "../view/days-list.js";
 import TripDay from "../view/day.js";
-import Point from "../view/point.js";
-import PointForm from "../view/point-form.js";
+// import Point from "../view/point.js";
+import PointPresenter from "./point.js";
+// import PointForm from "../view/point-form.js";
 import NoPoints from "../view/no-points.js";
-import {render, RenderPosition, replace} from "../utils/render.js";
+import {render, RenderPosition} from "../utils/render.js";
 import {sortByTime, sortByPrice} from "../utils/point.js";
 import {POINT_COUNT} from "../main.js";
 import {SortType} from "../const.js";
-
+import {updateItem} from "../utils/common.js";
 
 export default class Trip {
   constructor(tripContainer) {
     this._tripContainer = tripContainer;
     this._currentSortType = SortType.DEFAULT;
+    this._pointPresenters = {};
 
     this._sortComponent = new Sort();
     this._daysListComponent = new DaysList();
-    this._tripDayComponent = new TripDay();
-    this._pointComponent = new Point();
-    this._pointFormComponent = new PointForm();
     this._noPointsComponent = new NoPoints();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(tripPoints) {
@@ -32,6 +33,18 @@ export default class Trip {
     // сохранив исходный массив:
     this._sourcedtripPoints = tripPoints.slice();
     this._renderTrip();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._pointPresenters)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handlePointChange(updatedTask) {
+    this._tripPoints = updateItem(this._tripPoints, updatedTask);
+    this._sourcedtripPoints = updateItem(this._sourcedtripPoints, updatedTask);
+    this._pointPresenters[updatedTask.id].init(updatedTask);
   }
 
   _sortPoints(sortType) {
@@ -79,39 +92,10 @@ export default class Trip {
     render(this._tripContainer, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderPoint(container, point) {
-    const pointComponent = new Point(point);
-    const pointFormComponent = new PointForm(point);
-
-    render(container, pointComponent.getElement(), RenderPosition.BEFOREEND);
-
-    const replacePointToForm = () => {
-      replace(pointFormComponent, pointComponent);
-      document.addEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const replaceFormToPoint = () => {
-      replace(pointComponent, pointFormComponent);
-    };
-
-    pointComponent.setEditClickHandler(() => {
-      replacePointToForm();
-    });
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    if (pointFormComponent) {
-      pointFormComponent.setFormSubmitHandler(() => {
-        replaceFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-    }
+  _renderPoint(point, tripEventList) {
+    const pointPresenter = new PointPresenter(tripEventList, this._handlePointChange, this._handleModeChange);
+    pointPresenter.init(point);
+    this._pointPresenters[point.id] = pointPresenter;
   }
 
   _renderTripPoints() {
@@ -143,7 +127,7 @@ export default class Trip {
         this._tripPoints.filter((point) => {
           return point.from.toLocaleDateString(`en-US`, dateOptions) === uniqueDates[i];
         }).forEach((point) => {
-          this._renderPoint(tripEventList, point);
+          this._renderPoint(point, tripEventList);
         });
       }
     } else {
@@ -153,7 +137,7 @@ export default class Trip {
       const tripEventList = tripDay.getEventList();
 
       this._tripPoints.forEach((point) => {
-        this._renderPoint(tripEventList, point);
+        this._renderPoint(point, tripEventList);
       });
     }
   }
@@ -170,6 +154,10 @@ export default class Trip {
 
   _clearPointsList() {
     this._daysListComponent.getElement().innerHTML = ``;
+    Object
+      .values(this._pointPresenters)
+      .forEach((presenter) => presenter.destroy());
+    this._pointPresenters = {};
   }
 
 }
