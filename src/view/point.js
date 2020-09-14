@@ -1,4 +1,5 @@
 import {upFirstLetter} from "../utils/common.js";
+import {formatTaskDueDate} from "../utils/point.js";
 import Abstract from "./abstract.js";
 
 export const tripPointTemplate = (point) => {
@@ -38,27 +39,14 @@ export const tripPointTemplate = (point) => {
     // second: `numeric`,
   };
 
-  const fromMilliseconds = from.getTime();
-  const toMilliseconds = to.getTime();
-  const differenceMilliseconds = toMilliseconds - fromMilliseconds;
+  function getFormatedTime() {
 
-  function msToTime(duration) {
-    let days = Math.floor(duration / (24 * 60 * 60 * 1000));
-    let daysms = duration % (24 * 60 * 60 * 1000);
-    let hours = Math.floor((daysms) / (60 * 60 * 1000));
-    let hoursms = duration % (60 * 60 * 1000);
-    let minutes = Math.floor((hoursms) / (60 * 1000));
-    // let minutesms = duration % (60 * 1000);
-    // let sec = Math.floor((minutesms) / (1000));
+    const dateDiff = formatTaskDueDate(to, from);
 
-    minutes = minutes < 0 ? minutes * (-1) : minutes;
-    hours = hours < 0 ? hours * (-1) : hours;
-    days = days < 0 ? days * (-1) : days;
-
-    if (days === 0) {
-      return `${hours}H ${minutes}M`;
+    if (dateDiff.days() === 0) {
+      return `${dateDiff.hours()}H ${dateDiff.minutes()}M`;
     } else {
-      return `${days}D ${hours}H ${minutes}M`;
+      return `${dateDiff.days()}D ${dateDiff.hours()}H ${dateDiff.minutes()}M`;
     }
   }
 
@@ -75,7 +63,7 @@ export const tripPointTemplate = (point) => {
                   &mdash;
                   <time class="event__end-time" datetime="2019-03-18T11:00">${to.toLocaleString(`en-US`, options)}</time>
                 </p>
-                <p class="event__duration">${msToTime(differenceMilliseconds)}</p>
+                <p class="event__duration">${getFormatedTime()}</p>
               </div>
 
               <p class="event__price">
