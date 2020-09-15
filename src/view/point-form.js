@@ -333,7 +333,7 @@ export default class PointForm extends SmartView {
             enableTime: true,
             dateFormat: `d/m/y H:i`,
             defaultDate: this._data.from,
-            time_24hr: true,
+            // time_24hr: true,
           }
       );
       this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._fromDateChangeHandler);
@@ -357,7 +357,7 @@ export default class PointForm extends SmartView {
             enableTime: true,
             dateFormat: `d/m/y H:i`,
             defaultDate: this._data.to,
-            time_24hr: true,
+            // time_24hr: true,
           }
       );
       this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._toDateChangeHandler);
