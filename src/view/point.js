@@ -1,6 +1,7 @@
 import {upFirstLetter} from "../utils/common.js";
-import {formatTaskDueDate} from "../utils/point.js";
+import {formatPointDuration} from "../utils/point.js";
 import Abstract from "./abstract.js";
+import moment from "moment";
 
 export const tripPointTemplate = (point) => {
   const {type, city, price, offers, from, to} = point;
@@ -26,22 +27,22 @@ export const tripPointTemplate = (point) => {
     return isChecked;
   }).join(` `);
 
-  const options = {
-    // era: `long`,
-    // year: `2-digit`,
-    // month: `2-digit`,
-    // day: `2-digit`,
-    // weekday: `long`,
-    // timezone: `UTC`,
-    hour: `2-digit`,
-    hour12: false,
-    minute: `numeric`,
-    // second: `numeric`,
-  };
+  // const options = {
+  //   // era: `long`,
+  //   // year: `2-digit`,
+  //   // month: `2-digit`,
+  //   // day: `2-digit`,
+  //   // weekday: `long`,
+  //   // timezone: `UTC`,
+  //   hour: `2-digit`,
+  //   hour12: false,
+  //   minute: `numeric`,
+  //   // second: `numeric`,
+  // };
 
   function getFormatedTime() {
 
-    const dateDiff = formatTaskDueDate(to, from);
+    const dateDiff = formatPointDuration(new Date(to), new Date(from));
 
     if (dateDiff.days() === 0) {
       return `${dateDiff.hours()}H ${dateDiff.minutes()}M`;
@@ -49,6 +50,12 @@ export const tripPointTemplate = (point) => {
       return `${dateDiff.days()}D ${dateDiff.hours()}H ${dateDiff.minutes()}M`;
     }
   }
+
+  const fromTime = moment(from, moment.defaultFormat);
+  const fromFormated = fromTime.format(`HH:mm`);
+
+  const toTime = moment(to, moment.defaultFormat);
+  const toFormated = toTime.format(`HH:mm`);
 
   return `<li class="trip-events__item">
             <div class="event">
@@ -59,9 +66,9 @@ export const tripPointTemplate = (point) => {
 
               <div class="event__schedule">
                 <p class="event__time">
-                  <time class="event__start-time" datetime="2019-03-18T10:30">${from.toLocaleString(`en-US`, options)}</time>
+                  <time class="event__start-time" datetime="2019-03-18T10:30">${fromFormated}</time>
                   &mdash;
-                  <time class="event__end-time" datetime="2019-03-18T11:00">${to.toLocaleString(`en-US`, options)}</time>
+                  <time class="event__end-time" datetime="2019-03-18T11:00">${toFormated}</time>
                 </p>
                 <p class="event__duration">${getFormatedTime()}</p>
               </div>

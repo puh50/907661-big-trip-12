@@ -8,10 +8,14 @@ export const sortByPrice = (pointA, pointB) => {
   return pointA.price - pointB.price;
 };
 
-export const formatTaskDueDate = (dateA, dateB) => {
+export const formatPointDuration = (dateA, dateB) => {
   // if (!(date instanceof Date)) {
   //   return ``;
   // }
 
-  return moment.duration(moment(dateA).diff(moment(dateB)));
+  if (dateA > dateB) {
+    return moment.duration(moment(dateA).diff(moment(dateB)));
+  }
+
+  return moment.duration(moment(dateB).diff(moment(dateA)));
 };
