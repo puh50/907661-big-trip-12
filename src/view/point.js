@@ -1,5 +1,7 @@
 import {upFirstLetter} from "../utils/common.js";
+import {formatPointDuration} from "../utils/point.js";
 import Abstract from "./abstract.js";
+import moment from "moment";
 
 export const tripPointTemplate = (point) => {
   const {type, city, price, offers, from, to} = point;
@@ -25,42 +27,22 @@ export const tripPointTemplate = (point) => {
     return isChecked;
   }).join(` `);
 
-  const options = {
-    // era: `long`,
-    // year: `2-digit`,
-    // month: `2-digit`,
-    // day: `2-digit`,
-    // weekday: `long`,
-    // timezone: `UTC`,
-    hour: `2-digit`,
-    hour12: false,
-    minute: `numeric`,
-    // second: `numeric`,
+  const getFormatedTime = () => {
+
+    const dateDiff = formatPointDuration(to, from);
+
+    if (dateDiff.days() === 0) {
+      return `${dateDiff.hours()}H ${dateDiff.minutes()}M`;
+    } else {
+      return `${dateDiff.days()}D ${dateDiff.hours()}H ${dateDiff.minutes()}M`;
+    }
   };
 
-  const fromMilliseconds = from.getTime();
-  const toMilliseconds = to.getTime();
-  const differenceMilliseconds = toMilliseconds - fromMilliseconds;
+  const fromTime = moment(from, moment.defaultFormat);
+  const fromFormated = fromTime.format(`HH:mm`);
 
-  function msToTime(duration) {
-    let days = Math.floor(duration / (24 * 60 * 60 * 1000));
-    let daysms = duration % (24 * 60 * 60 * 1000);
-    let hours = Math.floor((daysms) / (60 * 60 * 1000));
-    let hoursms = duration % (60 * 60 * 1000);
-    let minutes = Math.floor((hoursms) / (60 * 1000));
-    // let minutesms = duration % (60 * 1000);
-    // let sec = Math.floor((minutesms) / (1000));
-
-    minutes = minutes < 0 ? minutes * (-1) : minutes;
-    hours = hours < 0 ? hours * (-1) : hours;
-    days = days < 0 ? days * (-1) : days;
-
-    if (days === 0) {
-      return `${hours}H ${minutes}M`;
-    } else {
-      return `${days}D ${hours}H ${minutes}M`;
-    }
-  }
+  const toTime = moment(to, moment.defaultFormat);
+  const toFormated = toTime.format(`HH:mm`);
 
   return `<li class="trip-events__item">
             <div class="event">
@@ -71,11 +53,11 @@ export const tripPointTemplate = (point) => {
 
               <div class="event__schedule">
                 <p class="event__time">
-                  <time class="event__start-time" datetime="2019-03-18T10:30">${from.toLocaleString(`en-US`, options)}</time>
+                  <time class="event__start-time" datetime="2019-03-18T10:30">${fromFormated}</time>
                   &mdash;
-                  <time class="event__end-time" datetime="2019-03-18T11:00">${to.toLocaleString(`en-US`, options)}</time>
+                  <time class="event__end-time" datetime="2019-03-18T11:00">${toFormated}</time>
                 </p>
-                <p class="event__duration">${msToTime(differenceMilliseconds)}</p>
+                <p class="event__duration">${getFormatedTime()}</p>
               </div>
 
               <p class="event__price">

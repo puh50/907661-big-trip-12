@@ -1,6 +1,9 @@
 import {cities, pointTypesTransport, pointTypesIn} from "../mock/point-mock.js";
 import {upFirstLetter} from "../utils/common.js";
 import SmartView from "./smart.js";
+import flatpickr from "flatpickr";
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import moment from "moment";
 
 const date = new Date(2020, 7, 26, 0);
 
@@ -127,29 +130,20 @@ const createPointFormTemplate = (point = defaultPoint) => {
   }).join(` `);
 
   const dateRange = () => {
-    const options = {
-      // era: `long`,
-      year: `2-digit`,
-      month: `2-digit`,
-      day: `2-digit`,
-      // weekday: `long`,
-      // timezone: `UTC`,
-      hour: `2-digit`,
-      hour12: false,
-      minute: `2-digit`,
-      // second: `2-digit`,
-    };
+
+    const fromFormated = from.format(`DD/MM/YY hh:mm`);
+    const toFormated = to.format(`DD/MM/YY hh:mm`);
 
     return `<div class="event__field-group  event__field-group--time">
               <label class="visually-hidden" for="event-start-time-1">
                 From
               </label>
-              <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${from.toLocaleString(`en-US`, options)}">
+              <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fromFormated}">
               &mdash;
               <label class="visually-hidden" for="event-end-time-1">
                 To
               </label>
-              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${to.toLocaleString(`en-US`, options)}">
+              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toFormated}">
             </div>`;
   };
 
@@ -234,6 +228,8 @@ export default class PointForm extends SmartView {
   constructor(point) {
     super();
     this._data = PointForm.parsePointToData(point);
+    this._fromDatepicker = null;
+    this._toDatepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteSelectHandler = this._favoriteSelectHandler.bind(this);
@@ -241,8 +237,12 @@ export default class PointForm extends SmartView {
     this._formCancelHandler = this._formCancelHandler.bind(this);
     this._eventTypeSelectHandler = this._eventTypeSelectHandler.bind(this);
     this._eventCitySelectHandler = this._eventCitySelectHandler.bind(this);
+    this._fromDateChangeHandler = this._fromDateChangeHandler.bind(this);
+    this._toDateChangeHandler = this._toDateChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setFromDatepicker();
+    this._setToDatepicker();
   }
 
   reset(point) {
@@ -255,6 +255,8 @@ export default class PointForm extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setFromDatepicker();
+    this._setToDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
@@ -262,11 +264,13 @@ export default class PointForm extends SmartView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+    moment(this._data.to).toDate();
+    moment(this._data.from).toDate();
   }
 
   _favoriteSelectHandler() {
     this.updateData({
-      isFavorite: !this._data.isFavorite
+      isFavorite: !this._data.isFavorite,
     }, true);
   }
 
@@ -276,9 +280,8 @@ export default class PointForm extends SmartView {
   }
 
   _eventTypeSelectHandler(evt) {
-    evt.preventDefault();
     this.updateData({
-      type: evt.target.value
+      type: evt.target.value,
     }, false);
   }
 
@@ -290,10 +293,71 @@ export default class PointForm extends SmartView {
   }
 
   _priceInputHandler(evt) {
-    // evt.preventDefault();
     this.updateData({
       price: evt.target.value
     }, true);
+  }
+
+  _fromDateChangeHandler(evt) {
+    this.updateData({
+      from: moment(evt.target.value, `DD/MM/YYYY HH:mm`),
+    }, true);
+  }
+
+  _toDateChangeHandler(evt) {
+    this.updateData({
+      to: moment(evt.target.value, `DD/MM/YYYY HH:mm`),
+    }, true);
+  }
+
+  _setFromDatepicker() {
+    if (this._fromDatepicker) {
+      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
+      // которые создает flatpickr при инициализации
+      this._fromDatepicker.destroy();
+      this._fromDatepicker = null;
+    }
+
+    if (this._data.from) {
+      // flatpickr есть смысл инициализировать только в случае,
+      // если поле выбора даты доступно для заполнения
+      this._fromDatepicker = flatpickr(
+          this.getElement().querySelector(`#event-start-time-1`),
+          {
+            enableTime: true,
+            dateFormat: `d/m/y H:i`,
+            defaultDate: this._data.from,
+            parseDate: (datestr, format) => {
+              return moment(datestr, format, true).toDate();
+            },
+          }
+      );
+      this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._fromDateChangeHandler);
+    }
+  }
+
+  _setToDatepicker() {
+    if (this._toDatepicker) {
+      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
+      // которые создает flatpickr при инициализации
+      this._toDatepicker.destroy();
+      this._toDatepicker = null;
+    }
+
+    if (this._data.to) {
+      this._toDatepicker = flatpickr(
+          this.getElement().querySelector(`#event-end-time-1`),
+          {
+            enableTime: true,
+            dateFormat: `d/m/y H:i`,
+            defaultDate: this._data.to,
+            parseDate: (datestr, format) => {
+              return moment(datestr, format, true).toDate();
+            },
+          }
+      );
+      this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._toDateChangeHandler);
+    }
   }
 
   setFormSubmitHandler(callback) {
@@ -312,6 +376,7 @@ export default class PointForm extends SmartView {
       this.getElement().querySelector(`.event__favorite-icon`).addEventListener(`click`, this._callback.favoriteClick);
     }
   }
+
 
   _setInnerHandlers() {
     this.getElement()

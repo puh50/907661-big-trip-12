@@ -1,9 +1,7 @@
 import Sort from "../view/sorting.js";
 import DaysList from "../view/days-list.js";
 import TripDay from "../view/day.js";
-// import Point from "../view/point.js";
 import PointPresenter from "./point.js";
-// import PointForm from "../view/point-form.js";
 import NoPoints from "../view/no-points.js";
 import {render, RenderPosition} from "../utils/render.js";
 import {sortByTime, sortByPrice} from "../utils/point.js";
@@ -101,19 +99,8 @@ export default class Trip {
   _renderTripPoints() {
     if (this._currentSortType === SortType.DEFAULT) {
 
-      const dateOptions = {
-        // era: `long`,
-        // year: `2-digit`,
-        month: `short`,
-        day: `2-digit`,
-        // weekday: `long`,
-        // timezone: `UTC`,
-        // hour24: `numeric`,
-        // minute: `numeric`,
-        // second: `numeric`,
-      };
       const uniqueDates = [...new Set(this._tripPoints.map((point) => {
-        return point.from.toLocaleDateString(`en-US`, dateOptions);
+        return point.from.format(`MMM d`);
       }))];
 
       for (let i = 0; i < uniqueDates.length; i++) {
@@ -125,7 +112,7 @@ export default class Trip {
         const tripEventList = tripDay.getEventList();
 
         this._tripPoints.filter((point) => {
-          return point.from.toLocaleDateString(`en-US`, dateOptions) === uniqueDates[i];
+          return point.from.format(`MMM d`) === uniqueDates[i];
         }).forEach((point) => {
           this._renderPoint(point, tripEventList);
         });
