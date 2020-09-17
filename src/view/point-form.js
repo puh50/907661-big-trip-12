@@ -130,18 +130,6 @@ const createPointFormTemplate = (point = defaultPoint) => {
   }).join(` `);
 
   const dateRange = () => {
-    // const options = {
-    //   // era: `long`,
-    //   year: `2-digit`,
-    //   month: `2-digit`,
-    //   day: `2-digit`,
-    //   // weekday: `long`,
-    //   // timezone: `UTC`,
-    //   hour: `2-digit`,
-    //   hour12: false,
-    //   minute: `2-digit`,
-    //   // second: `2-digit`,
-    // };
 
     const fromFormated = from.format(`DD/MM/YY hh:mm`);
     const toFormated = to.format(`DD/MM/YY hh:mm`);
@@ -312,13 +300,13 @@ export default class PointForm extends SmartView {
 
   _fromDateChangeHandler(evt) {
     this.updateData({
-      from: evt.target.value,
+      from: moment(evt.target.value, `DD/MM/YYYY HH:mm`),
     }, true);
   }
 
   _toDateChangeHandler(evt) {
     this.updateData({
-      to: evt.target.value,
+      to: moment(evt.target.value, `DD/MM/YYYY HH:mm`),
     }, true);
   }
 
@@ -357,11 +345,6 @@ export default class PointForm extends SmartView {
     }
 
     if (this._data.to) {
-      // flatpickr есть смысл инициализировать только в случае,
-      // если поле выбора даты доступно для заполнения
-      // flatpickr.defaultConfig.parseDate = (str) => {
-      //   return moment.utc(str, `DD.MM.YYYY`).toDate();
-      // };
       this._toDatepicker = flatpickr(
           this.getElement().querySelector(`#event-end-time-1`),
           {
@@ -371,10 +354,6 @@ export default class PointForm extends SmartView {
             parseDate: (datestr, format) => {
               return moment(datestr, format, true).toDate();
             },
-            // formatDate: (date, format, locale) => {
-            //   // locale can also be used
-            //   return moment(date).format(format);
-            // },
           }
       );
       this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._toDateChangeHandler);

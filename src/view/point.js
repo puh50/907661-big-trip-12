@@ -27,19 +27,6 @@ export const tripPointTemplate = (point) => {
     return isChecked;
   }).join(` `);
 
-  // const options = {
-  //   // era: `long`,
-  //   // year: `2-digit`,
-  //   // month: `2-digit`,
-  //   // day: `2-digit`,
-  //   // weekday: `long`,
-  //   // timezone: `UTC`,
-  //   hour: `2-digit`,
-  //   hour12: false,
-  //   minute: `numeric`,
-  //   // second: `numeric`,
-  // };
-
   const getFormatedTime = () => {
 
     const dateDiff = formatPointDuration(to, from);

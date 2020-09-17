@@ -9,10 +9,6 @@ export const sortByPrice = (pointA, pointB) => {
 };
 
 export const formatPointDuration = (dateA, dateB) => {
-  // if (!(date instanceof Date)) {
-  //   return ``;
-  // }
-
   if (dateA > dateB) {
     return moment.duration(moment(dateA).diff(moment(dateB)));
   }
