@@ -1,4 +1,5 @@
 import {getRandomInteger} from "../utils/common.js";
+import moment from "moment";
 
 // Date.now() и Math.random() - плохие решения для генерации id
 // в "продуктовом" коде, а для моков самое то.
@@ -100,16 +101,16 @@ export const generatePoint = () => {
   const photos = destination().photos;
   const description = destination().description;
 
-  const from = generateDate();
-  const to = generateDate();
+  const from = moment(generateDate());
+  const to = moment(generateDate());
 
   return {
     type,
     city,
     offers,
     price: getRandomInteger(0, 10000),
-    from: new Date(Math.min(from, to)),
-    to: new Date(Math.max(from, to)),
+    from: moment(Math.min(from, to)),
+    to: moment(Math.max(from, to)),
     photos,
     description,
     id: generateId(),

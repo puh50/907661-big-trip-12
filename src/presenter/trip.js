@@ -101,19 +101,19 @@ export default class Trip {
   _renderTripPoints() {
     if (this._currentSortType === SortType.DEFAULT) {
 
-      const dateOptions = {
-        // era: `long`,
-        // year: `2-digit`,
-        month: `short`,
-        day: `2-digit`,
-        // weekday: `long`,
-        // timezone: `UTC`,
-        // hour24: `numeric`,
-        // minute: `numeric`,
-        // second: `numeric`,
-      };
+      // const dateOptions = {
+      //   // era: `long`,
+      //   // year: `2-digit`,
+      //   month: `short`,
+      //   day: `2-digit`,
+      //   // weekday: `long`,
+      //   // timezone: `UTC`,
+      //   // hour24: `numeric`,
+      //   // minute: `numeric`,
+      //   // second: `numeric`,
+      // };
       const uniqueDates = [...new Set(this._tripPoints.map((point) => {
-        return point.from.toLocaleDateString(`en-US`, dateOptions);
+        return point.from.format(`MMM d`);
       }))];
 
       for (let i = 0; i < uniqueDates.length; i++) {
@@ -125,7 +125,7 @@ export default class Trip {
         const tripEventList = tripDay.getEventList();
 
         this._tripPoints.filter((point) => {
-          return point.from.toLocaleDateString(`en-US`, dateOptions) === uniqueDates[i];
+          return point.from.format(`MMM d`) === uniqueDates[i];
         }).forEach((point) => {
           this._renderPoint(point, tripEventList);
         });

@@ -1,7 +1,7 @@
 import moment from "moment";
 
 export const sortByTime = (pointA, pointB) => {
-  return (pointA.to.getTime() - pointA.from.getTime()) - (pointB.to.getTime() - pointB.from.getTime());
+  return (pointA.to - pointA.from - (pointB.to - pointB.from));
 };
 
 export const sortByPrice = (pointA, pointB) => {

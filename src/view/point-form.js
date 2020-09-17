@@ -3,6 +3,7 @@ import {upFirstLetter} from "../utils/common.js";
 import SmartView from "./smart.js";
 import flatpickr from "flatpickr";
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import moment from "moment";
 
 const date = new Date(2020, 7, 26, 0);
 
@@ -129,29 +130,32 @@ const createPointFormTemplate = (point = defaultPoint) => {
   }).join(` `);
 
   const dateRange = () => {
-    const options = {
-      // era: `long`,
-      year: `2-digit`,
-      month: `2-digit`,
-      day: `2-digit`,
-      // weekday: `long`,
-      // timezone: `UTC`,
-      hour: `2-digit`,
-      hour12: false,
-      minute: `2-digit`,
-      // second: `2-digit`,
-    };
+    // const options = {
+    //   // era: `long`,
+    //   year: `2-digit`,
+    //   month: `2-digit`,
+    //   day: `2-digit`,
+    //   // weekday: `long`,
+    //   // timezone: `UTC`,
+    //   hour: `2-digit`,
+    //   hour12: false,
+    //   minute: `2-digit`,
+    //   // second: `2-digit`,
+    // };
+
+    const fromFormated = from.format(`DD/MM/YY hh:mm`);
+    const toFormated = to.format(`DD/MM/YY hh:mm`);
 
     return `<div class="event__field-group  event__field-group--time">
               <label class="visually-hidden" for="event-start-time-1">
                 From
               </label>
-              <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${from.toLocaleString(`en-US`, options)}">
+              <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${fromFormated}">
               &mdash;
               <label class="visually-hidden" for="event-end-time-1">
                 To
               </label>
-              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${to.toLocaleString(`en-US`, options)}">
+              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${toFormated}">
             </div>`;
   };
 
@@ -272,6 +276,8 @@ export default class PointForm extends SmartView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+    moment(this._data.to).toDate();
+    moment(this._data.from).toDate();
   }
 
   _favoriteSelectHandler() {
@@ -333,7 +339,9 @@ export default class PointForm extends SmartView {
             enableTime: true,
             dateFormat: `d/m/y H:i`,
             defaultDate: this._data.from,
-            // time_24hr: true,
+            parseDate: (datestr, format) => {
+              return moment(datestr, format, true).toDate();
+            },
           }
       );
       this.getElement().querySelector(`#event-start-time-1`).addEventListener(`change`, this._fromDateChangeHandler);
@@ -351,13 +359,22 @@ export default class PointForm extends SmartView {
     if (this._data.to) {
       // flatpickr есть смысл инициализировать только в случае,
       // если поле выбора даты доступно для заполнения
+      // flatpickr.defaultConfig.parseDate = (str) => {
+      //   return moment.utc(str, `DD.MM.YYYY`).toDate();
+      // };
       this._toDatepicker = flatpickr(
           this.getElement().querySelector(`#event-end-time-1`),
           {
             enableTime: true,
             dateFormat: `d/m/y H:i`,
             defaultDate: this._data.to,
-            // time_24hr: true,
+            parseDate: (datestr, format) => {
+              return moment(datestr, format, true).toDate();
+            },
+            // formatDate: (date, format, locale) => {
+            //   // locale can also be used
+            //   return moment(date).format(format);
+            // },
           }
       );
       this.getElement().querySelector(`#event-end-time-1`).addEventListener(`change`, this._toDateChangeHandler);

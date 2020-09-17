@@ -40,16 +40,16 @@ export const tripPointTemplate = (point) => {
   //   // second: `numeric`,
   // };
 
-  function getFormatedTime() {
+  const getFormatedTime = () => {
 
-    const dateDiff = formatPointDuration(new Date(to), new Date(from));
+    const dateDiff = formatPointDuration(to, from);
 
     if (dateDiff.days() === 0) {
       return `${dateDiff.hours()}H ${dateDiff.minutes()}M`;
     } else {
       return `${dateDiff.days()}D ${dateDiff.hours()}H ${dateDiff.minutes()}M`;
     }
-  }
+  };
 
   const fromTime = moment(from, moment.defaultFormat);
   const fromFormated = fromTime.format(`HH:mm`);
